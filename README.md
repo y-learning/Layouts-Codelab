@@ -1,7 +1,5 @@
-Jetpack Compose Template
+Layouts Codelab using Jetpack Compose
 =========
-
-Up-To-Date Android Jetpack Compose template with *Kotlin* as the build script language.
 
 #### Dependencies:
 

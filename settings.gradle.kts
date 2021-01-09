@@ -1,2 +1,2 @@
-rootProject.name = "Compose Template"
+rootProject.name = "Layouts Codelab"
 include(":android")

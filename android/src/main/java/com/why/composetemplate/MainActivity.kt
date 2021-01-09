@@ -12,7 +12,7 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Main preview")
 @Composable
 fun DefaultPreview() {
     Greeting(name = "Jetpack Compose")

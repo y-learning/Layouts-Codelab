@@ -25,7 +25,7 @@ android {
     buildToolsVersion("30.0.3")
 
     defaultConfig {
-        applicationId = "com.why.composetemplate"
+        applicationId = "com.why.layoutscodelab"
         minSdkVersion(22)
         targetSdkVersion(30)
         versionCode = 1
