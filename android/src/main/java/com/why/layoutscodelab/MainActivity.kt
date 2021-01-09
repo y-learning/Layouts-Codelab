@@ -12,9 +12,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.ui.Alignment
@@ -54,6 +60,44 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun ScreenContent(modifier: Modifier) {
+    Column(modifier) {
+        Text(text = "Hi there!")
+        Text(text = "Thanks for trying Jetpack Compose.")
+    }
+}
+
+@Composable
+fun LayoutsCodelab() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "LayoutsCodelab") },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.Favorite)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        ScreenContent(
+            Modifier
+                .padding(innerPadding)
+                .padding(8.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LayoutsCodelabPreview() {
+    LayoutsCodelabTheme {
+        LayoutsCodelab()
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PhotographerCardPreview() {
@@ -67,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            // TODO
+            LayoutsCodelab()
         }
     }
 }
