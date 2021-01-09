@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.preferredSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AmbientContentAlpha
+import androidx.compose.material.BottomNavigation
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.Divider
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -20,7 +23,11 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Providers
 import androidx.compose.ui.Alignment
@@ -33,20 +40,25 @@ import androidx.compose.ui.unit.dp
 import com.why.layoutscodelab.themes.LayoutsCodelabTheme
 
 @Composable
+fun Avatar(modifier: Modifier = Modifier) {
+    Surface(
+        modifier = modifier.preferredSize(50.dp),
+        shape = CircleShape,
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f)
+    ) {}
+}
+
+@Composable
 fun PhotographerCard(modifier: Modifier = Modifier) {
-    Row(modifier
-        .padding(8.dp)
-        .clip(RoundedCornerShape(4.dp))
-        .background(MaterialTheme.colors.surface)
-        .clickable(onClick = { /*TODO*/ })
-        .padding(8.dp)
+    Row(
+        modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colors.surface)
+            .clickable(onClick = { /*TODO*/ })
+            .padding(8.dp)
     ) {
-        Surface(
-            modifier = Modifier.preferredSize(50.dp),
-            shape = CircleShape,
-            color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f)
-        ) {
-        }
+        Avatar()
         Column(
             modifier = Modifier
                 .padding(start = 8.dp)
@@ -69,6 +81,31 @@ private fun ScreenContent(modifier: Modifier) {
 }
 
 @Composable
+fun NavigationDrawer() {
+    Column {
+        Row(
+            modifier = Modifier
+                .padding(vertical = 32.dp, horizontal = 16.dp)
+        ) {
+            Avatar(Modifier.preferredSize(72.dp))
+            Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                Text(
+                    "Alfred Sisley",
+                    style = MaterialTheme.typography.h4,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
+        }
+        Divider()
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Item 1")
+            Text("Item 2")
+            Text("Item 3")
+        }
+    }
+}
+
+@Composable
 fun LayoutsCodelab() {
     Scaffold(
         topBar = {
@@ -80,6 +117,41 @@ fun LayoutsCodelab() {
                     }
                 }
             )
+        },
+        bottomBar = {
+            BottomNavigation {
+                Row(
+                    modifier = Modifier
+                        .align(alignment = Alignment.CenterVertically)
+                ) {
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Filled.Add)
+                    }
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Filled.Create)
+                    }
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Filled.Email)
+                    }
+                }
+            }
+        },
+        drawerContent = {
+            NavigationDrawer()
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Filled.ThumbUp)
+            }
         }
     ) { innerPadding ->
         ScreenContent(
@@ -87,6 +159,14 @@ fun LayoutsCodelab() {
                 .padding(innerPadding)
                 .padding(8.dp)
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NavigationDrawerPreview() {
+    LayoutsCodelabTheme {
+        NavigationDrawer()
     }
 }
 
