@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +43,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.why.layoutscodelab.themes.LayoutsCodelabTheme
+
+@Composable
+fun MyOwnColumn(
+    modifier: Modifier = Modifier,
+    children: @Composable () -> Unit
+) = Layout(
+    content = children,
+    modifier = modifier
+) { measurables, constraints ->
+    val placeables = measurables.map { it.measure(constraints) }
+
+    layout(constraints.maxWidth, constraints.maxHeight) {
+        placeables.fold(0) { y, placeable ->
+            placeable.placeRelative(0, y)
+
+            y + placeable.height
+        }
+    }
+}
 
 fun Modifier.firstBaselineToTop(firstBaselineToTop: Dp) =
     Modifier.layout { measurable, constraints ->
@@ -223,6 +243,18 @@ fun TextWithPaddingToBaselinePreview() {
 fun TextWithNormalPaddingPreview() {
     LayoutsCodelabTheme {
         Text("Hi there!", Modifier.padding(top = 24.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MyOwnColumnPreview() {
+    LayoutsCodelabTheme {
+        MyOwnColumn {
+            Text("Hi 1!")
+            Text("Hi 2!")
+            Text("Hi 3!")
+        }
     }
 }
 
