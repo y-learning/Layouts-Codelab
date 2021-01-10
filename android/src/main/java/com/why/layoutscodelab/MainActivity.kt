@@ -2,16 +2,22 @@ package com.why.layoutscodelab
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ScrollableRow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.preferredWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AmbientContentAlpha
 import androidx.compose.material.BottomNavigation
+import androidx.compose.material.Card
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
@@ -33,6 +39,7 @@ import androidx.compose.runtime.Providers
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.Layout
@@ -43,6 +50,105 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.why.layoutscodelab.themes.LayoutsCodelabTheme
+import kotlin.math.max
+
+val topics = listOf(
+    "Arts & Crafts",
+    "Beauty",
+    "Books",
+    "Business",
+    "Comics",
+    "Culinary",
+    "Design",
+    "Fashion",
+    "Film",
+    "History",
+    "Maths",
+    "Music",
+    "People",
+    "Philosophy",
+    "Religion",
+    "Social sciences",
+    "Technology",
+    "TV",
+    "Writing"
+)
+
+@Composable
+fun StaggeredGrid(
+    modifier: Modifier = Modifier,
+    rowsCount: Int = 3,
+    content: @Composable () -> Unit
+) = Layout(
+    modifier = modifier,
+    content = content
+) { measurables, constraints ->
+    // Keep track of the width and max height of each row.
+    val rowWidths = IntArray(rowsCount) { 0 }
+    val rowMaxHeights = IntArray(rowsCount) { 0 }
+
+    val placeables = measurables.mapIndexed { index, measurable ->
+        val placeable = measurable.measure(constraints)
+
+        val rowIndex = index % rowsCount
+
+        rowWidths[rowIndex] = rowWidths[rowIndex] + placeable.width
+        rowMaxHeights[rowIndex] = max(rowMaxHeights[rowIndex], placeable.height)
+
+        placeable
+    }
+
+    val width = rowWidths.maxOrNull()
+        ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth))
+        ?: constraints.minWidth
+
+    val height = rowMaxHeights.sum()
+        .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
+
+    val rowsYCoordinates = IntArray(rowsCount) { 0 }
+
+    for (i in 1 until rowsCount) {
+        val pre = i - 1
+        rowsYCoordinates[i] = rowsYCoordinates[pre] + rowMaxHeights[pre]
+    }
+
+    layout(width, height) {
+        placeables.foldIndexed(IntArray(rowsCount) { 0 }) { i, itemsXs, item ->
+            val rowIndex = i % rowsCount
+
+            item.placeRelative(itemsXs[rowIndex], rowsYCoordinates[rowIndex])
+
+            itemsXs[rowIndex] += item.width
+
+            itemsXs
+        }
+    }
+}
+
+@Composable
+fun Chip(modifier: Modifier = Modifier, text: String) {
+    Card(
+        modifier = modifier,
+        border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 8.dp,
+                vertical = 4.dp
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .preferredSize(16.dp, 16.dp)
+                    .background(color = MaterialTheme.colors.secondary)
+            )
+            Spacer(Modifier.preferredWidth(4.dp))
+            Text(text = text)
+        }
+    }
+}
 
 @Composable
 fun MyOwnColumn(
@@ -117,10 +223,13 @@ fun PhotographerCard(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ScreenContent(modifier: Modifier) {
-    Column(modifier) {
-        Text(text = "Hi there!")
-        Text(text = "Thanks for trying Jetpack Compose.")
+private fun ScreenContent(modifier: Modifier = Modifier) {
+    ScrollableRow(modifier = modifier) {
+        StaggeredGrid(rowsCount = 5) {
+            topics.forEach { topic ->
+                Chip(modifier = Modifier.padding(8.dp), text = topic)
+            }
+        }
     }
 }
 
@@ -255,6 +364,14 @@ fun MyOwnColumnPreview() {
             Text("Hi 2!")
             Text("Hi 3!")
         }
+    }
+}
+
+@Preview
+@Composable
+fun ChipPreview() {
+    LayoutsCodelabTheme {
+        Chip(text = "Hi there")
     }
 }
 
