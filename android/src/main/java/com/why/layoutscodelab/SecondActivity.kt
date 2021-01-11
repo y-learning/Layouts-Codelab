@@ -5,10 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.ConstraintLayout
 import androidx.compose.foundation.layout.ConstraintSet
 import androidx.compose.foundation.layout.Dimension
+import androidx.compose.foundation.layout.ExperimentalLayout
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.preferredHeight
+import androidx.compose.foundation.layout.preferredWidth
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Button
+import androidx.compose.material.Divider
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.WithConstraints
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.setContent
@@ -101,11 +113,43 @@ fun DecoupledConstraintLayout() {
     }
 }
 
+@ExperimentalLayout
+@Composable
+fun TwoTexts(modifier: Modifier = Modifier, text1: String, text2: String) {
+    Row(modifier = modifier.preferredHeight(IntrinsicSize.Min)) {
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 4.dp)
+                .wrapContentWidth(Alignment.Start),
+            text = text1
+        )
+
+        Divider(
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxHeight()
+                .preferredWidth(1.dp)
+        )
+
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 4.dp)
+                .wrapContentWidth(Alignment.End),
+            text = text2
+        )
+    }
+}
+
+@ExperimentalLayout
 @Preview(showBackground = true)
 @Composable
 fun ConstraintLayoutContentPreview() {
     LayoutsCodelabTheme {
-        DecoupledConstraintLayout()
+        Surface {
+            TwoTexts(text1 = "Hi", text2 = "there")
+        }
     }
 }
 
